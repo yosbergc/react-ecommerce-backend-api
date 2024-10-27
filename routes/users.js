@@ -1,30 +1,36 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const Connection = require('../libs/postgres');
+const Connection = require('../libs/sequelize');
+const User = require('../schemas/users')
 const router = express.Router()
 
 router.get('/', async (req, res) => {
-    const response = await Connection.query('SELECT * FROM users')
-    res.json(response.rows) 
+    const [response] = await Connection.query('SELECT * FROM users')
+    res.json(response) 
 })
 router.get('/:id', (req, res) => {
 
 })
 router.post('/', async (req, res) => {
-    const { id, firstName, lastName, email, password } = req.body
+    const { firstName, lastName, email, password } = req.body
     
-    if (!id || !firstName || !lastName || !email || !password) {
+    if (!firstName || !lastName || !email || !password) {
         return res.status(400).send('Bad Request')
     }
     try {
         const newPassword = await bcrypt.hash(password, 4);
-        const client = await Connection();
-        const response = await client.query(`INSERT INTO users (id, firstName, lastName, email, password) VALUES ($1,$2, $3, $4, $5)`, [id, firstName, lastName, email, newPassword])
+        const newUser = await User.create({
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: newPassword
+        })
+
         res.json({
-            response: response.rows
-    })
+            response: newUser
+        })
     } catch(error) {
-        res.status(400).send('We got one error')
+        res.status(400).send(error)
     }
 })
 router.delete('/:id', (req, res) => {
