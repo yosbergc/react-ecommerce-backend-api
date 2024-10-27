@@ -4,8 +4,7 @@ const Connection = require('../libs/postgres');
 const router = express.Router()
 
 router.get('/', async (req, res) => {
-    const client = await Connection()
-    const response = await client.query('SELECT * FROM users')
+    const response = await Connection.query('SELECT * FROM users')
     res.json(response.rows) 
 })
 router.get('/:id', (req, res) => {
