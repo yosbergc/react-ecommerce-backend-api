@@ -8,8 +8,14 @@ router.get('/', async (req, res) => {
     const response = await User.findAll()
     res.json(response) 
 })
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
+    const { id } = req.params;
+    if (!id) {
+        return res.status(400).send('Bad Request')
+    }
 
+    const user = await User.findByPk(id)
+    res.json(user)
 })
 router.post('/', async (req, res) => {
     const { firstName, lastName, email, password } = req.body
@@ -32,8 +38,15 @@ router.post('/', async (req, res) => {
         res.status(400).send(error)
     }
 })
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
+    const { id } = req.params;
+    if (!id || !data) {
+        return res.status(400).send('Incorrect request')
+    }
+    const user = await User.findByPk(id)
+    await user.destroy()
 
+    res.send(id)
 })
 router.patch('/:id', async (req, res) => {
     const { id } = req.params;
