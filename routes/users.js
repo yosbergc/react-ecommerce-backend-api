@@ -1,6 +1,6 @@
-const express = require('express')
-const bcrypt = require('bcrypt')
-const Connection = require('../libs/postgres')
+const express = require('express');
+const bcrypt = require('bcrypt');
+const Connection = require('../libs/postgres');
 const router = express.Router()
 
 router.get('/', async (req, res) => {
@@ -8,7 +8,6 @@ router.get('/', async (req, res) => {
     const response = await client.query('SELECT * FROM users')
     res.json(response.rows) 
 })
-
 router.get('/:id', (req, res) => {
 
 })

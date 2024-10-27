@@ -11,6 +11,6 @@ app.get('/', (req, res) => {
     res.send('Welcome to the API V1')
 })
 app.use('/products', productsRouter)
-app.use('/users', productsRouter)
+app.use('/users', usersRouter)
 
 app.listen(port)
