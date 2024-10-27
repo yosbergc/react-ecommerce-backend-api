@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
 })
 router.delete('/:id', async (req, res) => {
     const { id } = req.params;
-    if (!id || !data) {
+    if (!id) {
         return res.status(400).send('Incorrect request')
     }
     const user = await User.findByPk(id)
