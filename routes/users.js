@@ -5,7 +5,7 @@ const User = require('../schemas/users')
 const router = express.Router()
 
 router.get('/', async (req, res) => {
-    const [response] = await Connection.query('SELECT * FROM users')
+    const response = await User.findAll()
     res.json(response) 
 })
 router.get('/:id', (req, res) => {
@@ -25,7 +25,6 @@ router.post('/', async (req, res) => {
             email: email,
             password: newPassword
         })
-
         res.json({
             response: newUser
         })
@@ -36,8 +35,16 @@ router.post('/', async (req, res) => {
 router.delete('/:id', (req, res) => {
 
 })
-router.put('/:id', (req, res) => {
+router.patch('/:id', async (req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+    if (!id || !data) {
+        return res.status(400).send('Incorrect request')
+    }
+    const user = await User.findByPk(id)
+    const response = await user.update(data)
 
+    res.json(response)
 })
 
 module.exports = router;
