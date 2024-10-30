@@ -1,11 +1,12 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const Connection = require('../libs/sequelize');
 const User = require('../schemas/users')
 const router = express.Router()
 
 router.get('/', async (req, res) => {
-    const response = await User.findAll()
+    const response = await User.findAll({
+        include: ['document', 'posts']
+    })
     res.json(response) 
 })
 router.get('/:id', async (req, res) => {
@@ -29,7 +30,7 @@ router.post('/', async (req, res) => {
             firstName: firstName,
             lastName: lastName,
             email: email,
-            password: newPassword
+            password: newPassword,
         })
         res.json({
             response: newUser
@@ -43,11 +44,14 @@ router.delete('/:id', async (req, res) => {
     if (!id) {
         return res.status(400).send('Incorrect request')
     }
-    const user = await User.findByPk(id)
+    const user = await User.findByPk(id, {
+        include: ['document']
+    })
     await user.destroy()
 
     res.send(id)
 })
+
 router.patch('/:id', async (req, res) => {
     const { id } = req.params;
     const data = req.body;

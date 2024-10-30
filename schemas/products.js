@@ -1,5 +1,6 @@
 const sequelize = require ('../libs/sequelize')
-const { DataTypes } = require('sequelize')
+const Document = require('../schemas/document')
+const { DataTypes } = require('sequelize');
 
 const Product = sequelize.define('product', {
     id: {
@@ -24,5 +25,6 @@ const Product = sequelize.define('product', {
         allowNull: false
     }
 })
+
 
 module.exports = Product;
